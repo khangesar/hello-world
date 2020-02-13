@@ -1,0 +1,26 @@
+CREATE OR REPLACE function SYS.ora12c_stig_verify_function
+ ( username varchar2,
+   password varchar2,
+   old_password varchar2)
+ return boolean IS
+   differ integer;
+begin
+   if not ora_complexity_check(password, chars => 15, upper => 1, lower => 1,
+                           digit => 1, special => 1) then
+      return(false);
+   end if;
+
+   -- Check if the password differs from the previous password by at least
+   -- 8 characters
+   if old_password is not null then
+      differ := ora_string_distance(old_password, password);
+      if differ < 8 then
+         raise_application_error(-20033, 'The new password should differ '
+
+
+      end if;
+   end if;
+
+   return(true);
+end;
+/
